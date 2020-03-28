@@ -28,14 +28,25 @@ while running:
     keys = pygame.key.get_pressed()
     
     if keys[pygame.K_LEFT]:
-        x -= vel
+        if x > 0:
+            x -= vel
+        else:
+            x = 0
     if keys[pygame.K_RIGHT]:
-        x += vel
+        if x < (WIDTH - width):
+            x += vel
+        else:
+            x = WIDTH - width
     if keys[pygame.K_UP]:
-        y -= vel
+        if y > 0:
+            y -= vel
+        else:
+            y = 0
     if keys[pygame.K_DOWN]:
-        y += vel
-            
+        if y < (HEIGHT - height):
+            y += vel
+        else:
+            y = HEIGHT - height
     # DRAW
     screen.fill((0,0,0))
     pygame.draw.rect(screen, (255,0,0), (x,y,width,height))
