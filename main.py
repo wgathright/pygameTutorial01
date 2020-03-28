@@ -11,14 +11,17 @@ pygame.display.set_caption("First Game")
 
 x = 50
 y = 50
-width = 40
-height = 60
+width = 20
+height = 40
 vel = 5
+
+isJump = False
+jumpCount = 10
 
 #GAME LOOP
 running = True
 while running:
-    pygame.time.delay(100)
+    pygame.time.delay(50)
     
     # Check for events
     for event in pygame.event.get():
@@ -37,16 +40,33 @@ while running:
             x += vel
         else:
             x = WIDTH - width
-    if keys[pygame.K_UP]:
-        if y > 0:
-            y -= vel
+    if not(isJump):   
+        if keys[pygame.K_UP]:
+            if y > 0:
+                y -= vel
+            else:
+                y = 0
+        if keys[pygame.K_DOWN]:
+            if y < (HEIGHT - height):
+                y += vel
+            else:
+                y = HEIGHT - height
+        if keys[pygame.K_SPACE]:
+            isJump = True
+            print("Jumping...")
+    else: #if isJump True 
+        if jumpCount >= -10:
+            neg = 1
+            if jumpCount < 0:
+                neg = -1
+            y -= (jumpCount ** 2) * 0.3 * neg
+            jumpCount -= 1
         else:
-            y = 0
-    if keys[pygame.K_DOWN]:
-        if y < (HEIGHT - height):
-            y += vel
-        else:
-            y = HEIGHT - height
+            isJump = False
+            jumpCount = 10
+            
+
+            
     # DRAW
     screen.fill((0,0,0))
     pygame.draw.rect(screen, (255,0,0), (x,y,width,height))
