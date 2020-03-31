@@ -70,11 +70,60 @@ class projectile(object):
         pygame.draw.circle(screen, self.color, (self.x,self.y), self.radius)
         
 
+class enemy(object):
+    walkRight = [pygame.image.load('Game/R1E.png'), pygame.image.load('Game/R2E.png'), pygame.image.load('Game/R3E.png'),
+                 pygame.image.load('Game/R4E.png'), pygame.image.load('Game/R5E.png'), pygame.image.load('Game/R6E.png'),
+                 pygame.image.load('Game/R7E.png'), pygame.image.load('Game/R8E.png'), pygame.image.load('Game/R9E.png'),
+                 pygame.image.load('Game/R10E.png'), pygame.image.load('Game/R11E.png')]
+    walkLeft =  [pygame.image.load('Game/L1E.png'), pygame.image.load('Game/L2E.png'), pygame.image.load('Game/L3E.png'),
+                 pygame.image.load('Game/L4E.png'), pygame.image.load('Game/L5E.png'), pygame.image.load('Game/L6E.png'),
+                 pygame.image.load('Game/L7E.png'), pygame.image.load('Game/L8E.png'), pygame.image.load('Game/L9E.png'),
+                 pygame.image.load('Game/L10E.png'), pygame.image.load('Game/L11E.png')]
+
+
+    def __init__(self, x, y, width, height, end):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.end = end
+        self.path = [self.x, self.end]
+        self.walkCount = 0
+        self.vel = 3
+        
+    def draw(self, screen):
+        self.move()
+        if self.walkCount + 1 >= 33:
+            self.walkCount = 0
+            
+        if self.vel > 0:
+            screen.blit(self.walkRight[self.walkCount //3], (self.x, self.y))
+            self.walkCount += 1
+        else:
+            screen.blit(self.walkLeft[self.walkCount //3], (self.x, self.y))
+            self.walkCount += 1
+    
+    def move(self):
+        if self.vel > 0:
+            if self.x + self.vel < self.path[1]:
+                self.x += self.vel
+            else:
+                self.vel = self.vel * -1
+                self.walkCount = 0
+        else:
+            if self.x - self.vel > self.path[0]:
+                self.x += self.vel
+            else:
+                self.vel = self.vel * -1
+                self.walkCount = 0
+                
+                
 
 
 def DrawGameWindow():
     screen.blit(bg, (0,0))
     man.draw(screen)
+    goblin.draw(screen)
     
     for bullet in bullets:
         bullet.draw(screen)
@@ -83,7 +132,8 @@ def DrawGameWindow():
 
 
 #GAME LOOP
-man = player(50,HEIGHT - 64,64,64)
+man = player(50,HEIGHT - 62,64,64)
+goblin = enemy(100,HEIGHT - 60, 64, 64, WIDTH - 100)
 bullets = []
 running = True
 while running:
